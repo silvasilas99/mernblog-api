@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const authRoute = require('./routes/auth');
 
 dotenv.config();
 
@@ -15,5 +18,11 @@ mongoose
   	.then(console.log("Connected to DataBase sucessfully!"))
   	.catch((err) => console.log(err));
 
-app.use('/', (req, res) => res.send({ message: 'Welcome to my blog, user' }));
+// Middlewares
+app.use(express.json());
+app.use(helmet());
+app.use(morgan('common'));
+
+app.use('/api/auth', authRoute);
+
 app.listen(5000, () => console.log('Server is running on port 5000.'));
